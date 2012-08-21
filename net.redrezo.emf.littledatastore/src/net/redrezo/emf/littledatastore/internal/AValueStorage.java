@@ -2,7 +2,7 @@ package net.redrezo.emf.littledatastore.internal;
 
 import net.redrezo.emf.littledatastore.LDSId;
 
-public abstract class AValueStorage {
+public abstract class AValueStorage implements Storage {
 	
 	enum Mode {
 		DEFAULT,
@@ -17,7 +17,7 @@ public abstract class AValueStorage {
 		this.mode = mode;
 	}
 	
-	
+	@Override
 	public ValueHolder getValue(LDSId id) {
 		
 		ValueHolder holder = doGetValue(id);
@@ -31,6 +31,7 @@ public abstract class AValueStorage {
 		return holder;
 	}
 	
+	@Override
 	public ValueHolder setValue(LDSId id, ValueHolder holder) {
 		
 		ValueHolder oldHolder = doSetValue(id, holder);
@@ -41,6 +42,7 @@ public abstract class AValueStorage {
 		return oldHolder;
 	}
 	
+	@Override
 	public boolean isValueSet(LDSId id) {
 		boolean result = doIsValueSet(id);
 		if (!result) {

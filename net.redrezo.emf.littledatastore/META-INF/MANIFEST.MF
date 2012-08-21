@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Littledatastore
-Bundle-SymbolicName: net.redrezo.emf.littledatastore
+Bundle-SymbolicName: net.redrezo.emf.littledatastore;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: net.redrezo.emf.littledatastore.Activator
 Require-Bundle: org.eclipse.core.runtime,
@@ -9,3 +9,4 @@ Require-Bundle: org.eclipse.core.runtime,
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: net.redrezo.emf.littledatastore
+Service-Component: OSGI-INF/*.xml
