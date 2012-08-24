@@ -3,11 +3,13 @@ package net.redrezo.littledatastore.sample.model.test;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import net.redrezo.emf.littledatastore.Transaction;
 import net.redrezo.emf.littledatastore.TransactionService.TransactionException;
 import net.redrezo.littledatastore.model.SampleFactory;
+import net.redrezo.littledatastore.model.SamplePackage;
 import net.redrezo.littledatastore.model.SomeDomainObject;
 
 import org.junit.Test;
@@ -18,7 +20,7 @@ public class TransactionServiceTest extends LDSTest {
 	public void testNoTransaction() {
 		assertNull(store.getTransactionService().getTransaction());
 	}
-	
+
 	@Test
 	public void testTransaction() {
 		Transaction t = store.getTransactionService().openTransaction();
@@ -51,8 +53,10 @@ public class TransactionServiceTest extends LDSTest {
 	@Test
 	public void testDuplicateTransaction2() {
 		try {
+			store.getTransactionService().openTransaction();
 			// this should open a transaction
-			SomeDomainObject o = SampleFactory.eINSTANCE.createSomeDomainObject();
+			SomeDomainObject o = SampleFactory.eINSTANCE
+					.createSomeDomainObject();
 			o.setName("bla");
 			// so we can't open another one
 			store.getTransactionService().openTransaction();
@@ -69,10 +73,46 @@ public class TransactionServiceTest extends LDSTest {
 	}
 
 	@Test
+	public void testWithoutTransactionFactory() {
+		try {
+			assertNull(store.getTransaction());
+			SampleFactory.eINSTANCE.createSomeDomainObject();
+			fail();
+		} catch (TransactionException e) {
+			// ok :)
+		}
+	}
+
+	@Test
+	public void testWithoutTransactionStore() {
+		try {
+			assertNull(store.getTransaction());
+			store.create(SamplePackage.eINSTANCE.getSomeDomainObject());
+			fail();
+		} catch (TransactionException e) {
+			// ok :)
+		}
+	}
+
+	@Test
+	public void testOpenTranaction() {
+		try {
+			Transaction t = store.openTransaction();
+			assertSame(t, store.getTransaction());
+		} finally {
+			try {
+				store.getTransaction().rollback();
+			} catch (UnsupportedOperationException e) {
+				// TODO remove when implemented
+			}
+		}
+	}
+
+	@Test
 	public void testDirty() {
+		Transaction t = store.openTransaction();
 		SomeDomainObject o = SampleFactory.eINSTANCE.createSomeDomainObject();
 		o.setName("bla");
-		Transaction t = store.getTransactionService().getTransaction();
 		assertTrue(t.isDirty());
 		try {
 			t.rollback();

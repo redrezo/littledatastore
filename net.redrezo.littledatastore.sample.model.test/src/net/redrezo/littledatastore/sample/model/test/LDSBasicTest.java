@@ -17,25 +17,34 @@ public class LDSBasicTest extends LDSTest {
 		final float SIZE = 21.0f;
 		final int NUMBER = 1;
 
-		SomeDomainObject obj = (SomeDomainObject) store
-				.create(SamplePackage.eINSTANCE.getSomeDomainObject());
-		SomeOtherDomainObject otherObj = (SomeOtherDomainObject) store
-				.create(SamplePackage.eINSTANCE.getSomeOtherDomainObject());
+		try {
+			store.openTransaction();
+			SomeDomainObject obj = (SomeDomainObject) store
+					.create(SamplePackage.eINSTANCE.getSomeDomainObject());
+			SomeOtherDomainObject otherObj = (SomeOtherDomainObject) store
+					.create(SamplePackage.eINSTANCE.getSomeOtherDomainObject());
 
-		obj.setName(NAME);
-		obj.setNumber(NUMBER);
-		otherObj.setSize(SIZE);
+			obj.setName(NAME);
+			obj.setNumber(NUMBER);
+			otherObj.setSize(SIZE);
 
-		assertNull(obj.getSomeref());
-		obj.setSomeref(otherObj);
+			assertNull(obj.getSomeref());
+			obj.setSomeref(otherObj);
 
-		assertSame(otherObj, obj.getSomeref());
-		assertEquals(SIZE, obj.getSomeref().getSize(), 0f);
-		assertEquals(NAME, obj.getName());
-		assertEquals(NUMBER, obj.getNumber());
+			assertSame(otherObj, obj.getSomeref());
+			assertEquals(SIZE, obj.getSomeref().getSize(), 0f);
+			assertEquals(NAME, obj.getName());
+			assertEquals(NUMBER, obj.getNumber());
 
-		assertTrue(otherObj.eStore() instanceof LittleDataStore);
-		assertTrue(otherObj.eStore() == obj.eStore());
+			assertTrue(otherObj.eStore() instanceof LittleDataStore);
+			assertTrue(otherObj.eStore() == obj.eStore());
+		} finally {
+			try {
+				store.getTransaction().rollback();
+			} catch (UnsupportedOperationException e) {
+				// TODO remove when implemented
+			}
+		}
 	}
 
 	@Test
@@ -43,25 +52,34 @@ public class LDSBasicTest extends LDSTest {
 		final String NAME = "my first object";
 		final float SIZE = 21.0f;
 		final int NUMBER = 1;
-		SomeDomainObject obj = (SomeDomainObject) store
-				.create(SamplePackage.eINSTANCE.getSomeDomainObject());
-		SomeOtherDomainObject otherObj = SampleFactory.eINSTANCE
-				.createSomeOtherDomainObject();
-		assertSame(otherObj.eStore(), obj.eStore());
+		try {
+			store.openTransaction();
+			SomeDomainObject obj = (SomeDomainObject) store
+					.create(SamplePackage.eINSTANCE.getSomeDomainObject());
+			SomeOtherDomainObject otherObj = SampleFactory.eINSTANCE
+					.createSomeOtherDomainObject();
+			assertSame(otherObj.eStore(), obj.eStore());
 
-		obj.setName(NAME);
-		obj.setNumber(NUMBER);
-		otherObj.setSize(SIZE);
+			obj.setName(NAME);
+			obj.setNumber(NUMBER);
+			otherObj.setSize(SIZE);
 
-		assertNull(obj.getSomeref());
-		obj.setSomeref(otherObj);
+			assertNull(obj.getSomeref());
+			obj.setSomeref(otherObj);
 
-		assertSame(otherObj, obj.getSomeref());
-		assertEquals(SIZE, obj.getSomeref().getSize(), 0f);
-		assertEquals(NAME, obj.getName());
-		assertEquals(NUMBER, obj.getNumber());
+			assertSame(otherObj, obj.getSomeref());
+			assertEquals(SIZE, obj.getSomeref().getSize(), 0f);
+			assertEquals(NAME, obj.getName());
+			assertEquals(NUMBER, obj.getNumber());
 
-		assertTrue(otherObj.eStore() instanceof LittleDataStore);
-		assertSame(otherObj.eStore(), obj.eStore());
+			assertTrue(otherObj.eStore() instanceof LittleDataStore);
+			assertSame(otherObj.eStore(), obj.eStore());
+		} finally {
+			try {
+				store.getTransaction().rollback();
+			} catch (UnsupportedOperationException e) {
+				// TODO remove when implemented
+			}
+		}
 	}
 }

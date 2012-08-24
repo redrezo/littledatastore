@@ -12,5 +12,12 @@ public interface LittleDataStore extends EStore {
 		}
 	}
 	
-	public TransactionService getTransactionService();
+	TransactionService getTransactionService();
+
+	Transaction openTransaction();
+	/**
+	 * returns the current transaction, if there is one.
+	 * @return current transaction or null
+	 */
+	Transaction getTransaction();
 }
