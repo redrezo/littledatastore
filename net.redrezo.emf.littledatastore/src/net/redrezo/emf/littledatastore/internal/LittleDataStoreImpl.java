@@ -15,10 +15,10 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 
 public class LittleDataStoreImpl implements LittleDataStore {
-	private TransactionService transactionService;
+	private TransactionServiceImpl transactionService;
 
 	public LittleDataStoreImpl() {
-		transactionService = new TransactionServiceImpl();
+		transactionService = new TransactionServiceImpl(this);
 	}
 
 	/*
@@ -245,5 +245,9 @@ public class LittleDataStoreImpl implements LittleDataStore {
 	@Override
 	public Transaction getTransaction() {
 		return transactionService.getTransaction();
+	}
+
+	void disposeTransaction() {
+		transactionService.disposeTransaction();	
 	}
 }

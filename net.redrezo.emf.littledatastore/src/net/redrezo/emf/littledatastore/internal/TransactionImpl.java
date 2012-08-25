@@ -9,10 +9,10 @@ import net.redrezo.emf.littledatastore.Transaction;
 public class TransactionImpl implements Transaction, Storage {
 
 	private Map<LDSId, ValueHolder> transactionStorage = new HashMap<LDSId, ValueHolder>();
-	private final TransactionServiceImpl service;
+	private final LittleDataStoreImpl store;
 	
-	public TransactionImpl(TransactionServiceImpl service) {
-		this.service = service;
+	public TransactionImpl(LittleDataStoreImpl store) {
+		this.store = store;
 	}
 
 	@Override
@@ -49,6 +49,6 @@ public class TransactionImpl implements Transaction, Storage {
 
 	private void clearAndDispose() {
 		transactionStorage.clear();
-		service.disposeTransaction();
+		store.disposeTransaction();
 	}
 }
